@@ -1,15 +1,14 @@
 package hidc.seorin.hidcserver.controller
 
+import hidc.seorin.hidcserver.dto.CreateProfessorRequest
+import hidc.seorin.hidcserver.dto.UpdateProfessorRequest
 import hidc.seorin.hidcserver.entity.Professor
 import hidc.seorin.hidcserver.service.ProfessorService
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.Parameter
 import io.swagger.v3.oas.annotations.tags.Tag
 import org.springframework.http.ResponseEntity
-import org.springframework.web.bind.annotation.GetMapping
-import org.springframework.web.bind.annotation.PathVariable
-import org.springframework.web.bind.annotation.RequestMapping
-import org.springframework.web.bind.annotation.RestController
+import org.springframework.web.bind.annotation.*
 
 @Tag(name = "Professor", description = "교수 관리 API")
 @RestController
@@ -31,6 +30,37 @@ class ProfessorController(
     ): ResponseEntity<Professor> {
         val professor = professorService.findById(id) ?: return ResponseEntity.notFound().build()
         return ResponseEntity.ok(professor)
+    }
+
+    @Operation(summary = "교수 생성", description = "새로운 교수를 생성합니다.")
+    @PostMapping
+    fun create(@RequestBody request: CreateProfessorRequest): ResponseEntity<Professor> {
+        val professor = professorService.create(request)
+        return ResponseEntity.ok(professor)
+    }
+
+    @Operation(summary = "교수 수정", description = "교수 정보를 수정합니다.")
+    @PutMapping("/{id}")
+    fun update(
+        @Parameter(description = "교수 ID", required = true)
+        @PathVariable id: Int,
+        @RequestBody request: UpdateProfessorRequest
+    ): ResponseEntity<Professor> {
+        val professor = professorService.update(id, request) ?: return ResponseEntity.notFound().build()
+        return ResponseEntity.ok(professor)
+    }
+
+    @Operation(summary = "교수 삭제", description = "교수를 삭제합니다.")
+    @DeleteMapping("/{id}")
+    fun delete(
+        @Parameter(description = "교수 ID", required = true)
+        @PathVariable id: Int
+    ): ResponseEntity<Void> {
+        return if (professorService.delete(id)) {
+            ResponseEntity.noContent().build()
+        } else {
+            ResponseEntity.notFound().build()
+        }
     }
 }
 

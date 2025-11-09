@@ -1,17 +1,15 @@
 package hidc.seorin.hidcserver.controller
 
 import hidc.seorin.hidcserver.domain.SortType
+import hidc.seorin.hidcserver.dto.CreateDesignersRequest
+import hidc.seorin.hidcserver.dto.UpdateDesignersRequest
 import hidc.seorin.hidcserver.entity.Designers
 import hidc.seorin.hidcserver.service.DesignersService
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.Parameter
 import io.swagger.v3.oas.annotations.tags.Tag
 import org.springframework.http.ResponseEntity
-import org.springframework.web.bind.annotation.GetMapping
-import org.springframework.web.bind.annotation.PathVariable
-import org.springframework.web.bind.annotation.RequestMapping
-import org.springframework.web.bind.annotation.RequestParam
-import org.springframework.web.bind.annotation.RestController
+import org.springframework.web.bind.annotation.*
 
 @Tag(name = "Designers", description = "디자이너 관리 API")
 @RestController
@@ -39,6 +37,37 @@ class DesignersController(
     ): ResponseEntity<Designers> {
         val designers = designersService.findById(id) ?: return ResponseEntity.notFound().build()
         return ResponseEntity.ok(designers)
+    }
+
+    @Operation(summary = "디자이너 생성", description = "새로운 디자이너를 생성합니다.")
+    @PostMapping
+    fun create(@RequestBody request: CreateDesignersRequest): ResponseEntity<Designers> {
+        val designer = designersService.create(request)
+        return ResponseEntity.ok(designer)
+    }
+
+    @Operation(summary = "디자이너 수정", description = "디자이너 정보를 수정합니다.")
+    @PutMapping("/{id}")
+    fun update(
+        @Parameter(description = "디자이너 ID", required = true)
+        @PathVariable id: Long,
+        @RequestBody request: UpdateDesignersRequest
+    ): ResponseEntity<Designers> {
+        val designer = designersService.update(id, request) ?: return ResponseEntity.notFound().build()
+        return ResponseEntity.ok(designer)
+    }
+
+    @Operation(summary = "디자이너 삭제", description = "디자이너를 삭제합니다.")
+    @DeleteMapping("/{id}")
+    fun delete(
+        @Parameter(description = "디자이너 ID", required = true)
+        @PathVariable id: Long
+    ): ResponseEntity<Void> {
+        return if (designersService.delete(id)) {
+            ResponseEntity.noContent().build()
+        } else {
+            ResponseEntity.notFound().build()
+        }
     }
 }
 

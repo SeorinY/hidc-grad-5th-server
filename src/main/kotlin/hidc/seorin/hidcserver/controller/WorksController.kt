@@ -1,15 +1,14 @@
 package hidc.seorin.hidcserver.controller
 
+import hidc.seorin.hidcserver.dto.CreateWorksRequest
+import hidc.seorin.hidcserver.dto.UpdateWorksRequest
 import hidc.seorin.hidcserver.entity.Works
 import hidc.seorin.hidcserver.service.WorksService
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.Parameter
 import io.swagger.v3.oas.annotations.tags.Tag
 import org.springframework.http.ResponseEntity
-import org.springframework.web.bind.annotation.GetMapping
-import org.springframework.web.bind.annotation.PathVariable
-import org.springframework.web.bind.annotation.RequestMapping
-import org.springframework.web.bind.annotation.RestController
+import org.springframework.web.bind.annotation.*
 
 @Tag(name = "Works", description = "작품 관리 API")
 @RestController
@@ -43,5 +42,36 @@ class WorksController(
         return ResponseEntity.ok(
             worksService.findByCategoryId(categoryId)
         )
+    }
+
+    @Operation(summary = "작품 생성", description = "새로운 작품을 생성합니다.")
+    @PostMapping
+    fun create(@RequestBody request: CreateWorksRequest): ResponseEntity<Works> {
+        val works = worksService.create(request)
+        return ResponseEntity.ok(works)
+    }
+
+    @Operation(summary = "작품 수정", description = "작품 정보를 수정합니다.")
+    @PutMapping("/{id}")
+    fun update(
+        @Parameter(description = "작품 ID", required = true)
+        @PathVariable id: Long,
+        @RequestBody request: UpdateWorksRequest
+    ): ResponseEntity<Works> {
+        val works = worksService.update(id, request) ?: return ResponseEntity.notFound().build()
+        return ResponseEntity.ok(works)
+    }
+
+    @Operation(summary = "작품 삭제", description = "작품을 삭제합니다.")
+    @DeleteMapping("/{id}")
+    fun delete(
+        @Parameter(description = "작품 ID", required = true)
+        @PathVariable id: Long
+    ): ResponseEntity<Void> {
+        return if (worksService.delete(id)) {
+            ResponseEntity.noContent().build()
+        } else {
+            ResponseEntity.notFound().build()
+        }
     }
 }
