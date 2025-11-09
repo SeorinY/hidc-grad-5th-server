@@ -58,3 +58,4 @@ application-local.yaml
 application-local.yml
 application-dev.yaml
 application-dev.yml
+application.yaml
