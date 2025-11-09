@@ -2,31 +2,44 @@ package hidc.seorin.hidcserver.controller
 
 import hidc.seorin.hidcserver.entity.Works
 import hidc.seorin.hidcserver.service.WorksService
+import io.swagger.v3.oas.annotations.Operation
+import io.swagger.v3.oas.annotations.Parameter
+import io.swagger.v3.oas.annotations.tags.Tag
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
 
+@Tag(name = "Works", description = "작품 관리 API")
 @RestController
 @RequestMapping("/works")
 class WorksController(
     private val worksService: WorksService
 ) {
+    @Operation(summary = "모든 작품 조회", description = "등록된 모든 작품 목록을 조회합니다.")
     @GetMapping
     fun findAll(): List<Works> {
         return worksService.findAll()
     }
 
+    @Operation(summary = "작품 상세 조회", description = "특정 ID의 작품 정보를 조회합니다.")
     @GetMapping("/{id}")
-    fun findById(@PathVariable id: Long): ResponseEntity<Works> {
+    fun findById(
+        @Parameter(description = "작품 ID", required = true)
+        @PathVariable id: Long
+    ): ResponseEntity<Works> {
         return worksService.findById(id)
             ?.let { ResponseEntity.ok(it) }
             ?: ResponseEntity.notFound().build()
     }
 
-    @GetMapping("/categories/{id}")
-    fun findByCategoryId(@PathVariable categoryId: Int): ResponseEntity<List<Works>> {
+    @Operation(summary = "카테고리별 작품 조회", description = "특정 카테고리에 속한 작품 목록을 조회합니다.")
+    @GetMapping("/categories/{categoryId}")
+    fun findByCategoryId(
+        @Parameter(description = "카테고리 ID", required = true)
+        @PathVariable categoryId: Int
+    ): ResponseEntity<List<Works>> {
         return ResponseEntity.ok(
             worksService.findByCategoryId(categoryId)
         )
