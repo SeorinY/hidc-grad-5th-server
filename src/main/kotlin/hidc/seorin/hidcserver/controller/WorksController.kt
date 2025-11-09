@@ -38,7 +38,7 @@ class WorksController(
     @GetMapping("/categories/{categoryId}")
     fun findByCategoryId(
         @Parameter(description = "카테고리 ID", required = true)
-        @PathVariable categoryId: Int
+        @PathVariable categoryId: Int?
     ): ResponseEntity<List<Works>> {
         return ResponseEntity.ok(
             worksService.findByCategoryId(categoryId)

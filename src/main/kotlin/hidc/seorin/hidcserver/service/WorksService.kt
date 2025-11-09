@@ -20,12 +20,14 @@ class WorksService(
         return worksRepository.findById(id).orElse(null)
     }
 
-    fun findByCategoryId(categoryId: Int): List<Works> {
-        return worksCategoryRepository
-            .findById(categoryId)
-            .orElse(null)
-            ?.works
-            ?: emptyList()
+    fun findByCategoryId(categoryId: Int?): List<Works> {
+        return categoryId?.let {
+            worksCategoryRepository
+                .findById(categoryId)
+                .orElse(null)
+                ?.works
+                ?: emptyList()
+        } ?: worksRepository.findAll()
     }
 }
 
