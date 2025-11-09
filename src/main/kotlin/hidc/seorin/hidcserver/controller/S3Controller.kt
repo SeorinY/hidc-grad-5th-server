@@ -1,5 +1,6 @@
 package hidc.seorin.hidcserver.controller
 
+import hidc.seorin.hidcserver.domain.FolderType
 import hidc.seorin.hidcserver.dto.FileUploadResponse
 import hidc.seorin.hidcserver.service.S3Service
 import io.swagger.v3.oas.annotations.Operation
@@ -17,20 +18,20 @@ class S3Controller(
 ) {
     @Operation(
         summary = "파일 업로드",
-        description = "S3에 파일을 업로드합니다. folder: works, designers, professors, categories 등"
+        description = "S3에 파일을 업로드합니다. folder: works, designers, professors, works_file"
     )
     @PostMapping("/upload")
     fun uploadFile(
         @Parameter(description = "업로드할 파일", required = true)
         @RequestPart("file") file: MultipartFile,
-        @Parameter(description = "폴더명 (works, designers, professors 등)", required = true)
-        @RequestParam folder: String
+        @Parameter(description = "폴더명 (works, designers, professors, works_file)", required = true)
+        @RequestParam folder: FolderType
     ): ResponseEntity<FileUploadResponse> {
-        val fileUrl = s3Service.uploadFile(file, folder)
+        val fileUrl = s3Service.uploadFile(file, folder.folderName)
         val response = FileUploadResponse(
             fileUrl = fileUrl,
             fileName = file.originalFilename ?: "unknown",
-            folder = folder
+            folder = folder.folderName
         )
         return ResponseEntity.ok(response)
     }
