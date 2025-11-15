@@ -12,6 +12,9 @@ data class Professor(
     @Column(length = 100)
     val name: String? = null,
 
+    @Column(name = "class_name", length = 100)
+    val className: String? = null,
+
     @OneToMany(mappedBy = "professor", fetch = FetchType.LAZY)
     val works: List<Works> = emptyList()
 )

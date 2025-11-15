@@ -22,14 +22,20 @@ class ProfessorService(
 
     @Transactional
     fun create(request: CreateProfessorRequest): Professor {
-        val professor = Professor(name = request.name)
+        val professor = Professor(
+            name = request.name,
+            className = request.className
+        )
         return professorRepository.save(professor)
     }
 
     @Transactional
     fun update(id: Int, request: UpdateProfessorRequest): Professor? {
         val professor = professorRepository.findById(id).orElse(null) ?: return null
-        val updated = professor.copy(name = request.name)
+        val updated = professor.copy(
+            name = request.name,
+            className = request.className
+        )
         return professorRepository.save(updated)
     }
 
