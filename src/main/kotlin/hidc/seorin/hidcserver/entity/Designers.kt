@@ -21,9 +21,6 @@ data class Designers(
     @Column(length = 256)
     val email: String? = null,
 
-    @Column(name = "profile_url", length = 256)
-    val profileUrl: String? = null,
-
     @Column(name = "linkedin_url", length = 256)
     val linkedinUrl: String? = null,
 
