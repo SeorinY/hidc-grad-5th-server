@@ -9,6 +9,12 @@ data class Works(
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     val id: Long? = null,
 
+    @Column(columnDefinition = "TEXT")
+    val thumbnailImageUrl: String? = null,
+
+    @Column(columnDefinition = "TEXT")
+    val imageUrl: String? = null,
+
     @Column(length = 256)
     val name: String? = null,
 
@@ -24,6 +30,10 @@ data class Works(
 
     @OneToMany(mappedBy = "works", fetch = FetchType.LAZY)
     val designers: List<Designers> = emptyList(),
+
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "lead_designers_id", nullable = false)
+    val leadDesigner: Designers? = null,
 
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(

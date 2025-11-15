@@ -33,6 +33,9 @@ data class Designers(
     @Column(name = "behance_url", length = 256)
     val behanceUrl: String? = null,
 
+    @Column(name = "student_number", length = 256)
+    val studentNumber: String? = null,
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "works_id")
     val works: Works? = null

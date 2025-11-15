@@ -30,6 +30,7 @@ class WorksFileService(
         
         val worksFile = WorksFile(
             fileUrl = request.fileUrl,
+            fileType = request.fileType,
             seq = request.seq,
             works = works
         )
@@ -45,6 +46,7 @@ class WorksFileService(
         
         val updated = worksFile.copy(
             fileUrl = request.fileUrl,
+            fileType = request.fileType,
             seq = request.seq,
             works = works
         )

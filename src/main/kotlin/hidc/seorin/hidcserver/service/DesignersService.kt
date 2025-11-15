@@ -42,6 +42,7 @@ class DesignersService(
             linkedinUrl = request.linkedinUrl,
             instagramUrl = request.instagramUrl,
             behanceUrl = request.behanceUrl,
+            studentNumber = request.studentNumber,
             works = works
         )
         return designersRepository.save(designer)
@@ -61,6 +62,7 @@ class DesignersService(
             linkedinUrl = request.linkedinUrl,
             instagramUrl = request.instagramUrl,
             behanceUrl = request.behanceUrl,
+            studentNumber = request.studentNumber,
             works = works
         )
         return designersRepository.save(updated)

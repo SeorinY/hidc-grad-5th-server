@@ -9,6 +9,7 @@ data class UpdateDesignersRequest(
     val linkedinUrl: String?,
     val instagramUrl: String?,
     val behanceUrl: String?,
+    val studentNumber: String?,
     val worksId: Long?
 )
 
