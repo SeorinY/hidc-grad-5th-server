@@ -1,6 +1,7 @@
 package hidc.seorin.hidcserver.service
 
 import hidc.seorin.hidcserver.domain.ProfessorDomain
+import hidc.seorin.hidcserver.domain.WorksDomain
 import hidc.seorin.hidcserver.dto.CreateProfessorRequest
 import hidc.seorin.hidcserver.dto.UpdateProfessorRequest
 import hidc.seorin.hidcserver.entity.Professor
@@ -14,11 +15,20 @@ class ProfessorService(
     private val professorRepository: ProfessorRepository
 ) {
     fun findAll(): List<ProfessorDomain> {
-        return professorRepository.findAll().map { ProfessorDomain.from(it) }
+        return professorRepository
+            .findAll()
+            .map { ProfessorDomain.from(it) }
     }
 
     fun findById(id: Int): ProfessorDomain? {
-        return professorRepository.findById(id).orElse(null)?.let { ProfessorDomain.from(it) }
+        return professorRepository
+            .findById(id)
+            .orElse(null)
+            ?.let {professor ->
+                val professorDomain = ProfessorDomain.from(professor)
+                professorDomain.works = professor.works.map { WorksDomain.from(it) }
+                professorDomain
+            }
     }
 
     @Transactional
