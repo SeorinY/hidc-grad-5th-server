@@ -1,8 +1,8 @@
 package hidc.seorin.hidcserver.controller
 
+import hidc.seorin.hidcserver.domain.WorksCategoryDomain
 import hidc.seorin.hidcserver.dto.CreateWorksCategoryRequest
 import hidc.seorin.hidcserver.dto.UpdateWorksCategoryRequest
-import hidc.seorin.hidcserver.entity.WorksCategory
 import hidc.seorin.hidcserver.service.WorksCategoryService
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.Parameter
@@ -18,7 +18,7 @@ class WorksCategoryController(
 ) {
     @Operation(summary = "모든 카테고리 조회", description = "등록된 모든 카테고리 목록을 조회합니다.")
     @GetMapping
-    fun findAll(): List<WorksCategory> {
+    fun findAll(): List<WorksCategoryDomain> {
         return worksCategoryService.findAll()
     }
 
@@ -27,14 +27,14 @@ class WorksCategoryController(
     fun findById(
         @Parameter(description = "카테고리 ID", required = true)
         @PathVariable id: Int
-    ): ResponseEntity<WorksCategory> {
+    ): ResponseEntity<WorksCategoryDomain> {
         val category = worksCategoryService.findById(id) ?: return ResponseEntity.notFound().build()
         return ResponseEntity.ok(category)
     }
 
     @Operation(summary = "카테고리 생성", description = "새로운 카테고리를 생성합니다.")
     @PostMapping
-    fun create(@RequestBody request: CreateWorksCategoryRequest): ResponseEntity<WorksCategory> {
+    fun create(@RequestBody request: CreateWorksCategoryRequest): ResponseEntity<WorksCategoryDomain> {
         val category = worksCategoryService.create(request)
         return ResponseEntity.ok(category)
     }
@@ -45,7 +45,7 @@ class WorksCategoryController(
         @Parameter(description = "카테고리 ID", required = true)
         @PathVariable id: Int,
         @RequestBody request: UpdateWorksCategoryRequest
-    ): ResponseEntity<WorksCategory> {
+    ): ResponseEntity<WorksCategoryDomain> {
         val category = worksCategoryService.update(id, request) ?: return ResponseEntity.notFound().build()
         return ResponseEntity.ok(category)
     }

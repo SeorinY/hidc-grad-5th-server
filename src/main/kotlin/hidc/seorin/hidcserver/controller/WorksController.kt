@@ -1,8 +1,8 @@
 package hidc.seorin.hidcserver.controller
 
+import hidc.seorin.hidcserver.domain.WorksDomain
 import hidc.seorin.hidcserver.dto.CreateWorksRequest
 import hidc.seorin.hidcserver.dto.UpdateWorksRequest
-import hidc.seorin.hidcserver.entity.Works
 import hidc.seorin.hidcserver.service.WorksService
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.Parameter
@@ -18,7 +18,7 @@ class WorksController(
 ) {
     @Operation(summary = "모든 작품 조회", description = "등록된 모든 작품 목록을 조회합니다.")
     @GetMapping
-    fun findAll(): List<Works> {
+    fun findAll(): List<WorksDomain> {
         return worksService.findAll()
     }
 
@@ -27,7 +27,7 @@ class WorksController(
     fun findById(
         @Parameter(description = "작품 ID", required = true)
         @PathVariable id: Long
-    ): ResponseEntity<Works> {
+    ): ResponseEntity<WorksDomain> {
         return worksService.findById(id)
             ?.let { ResponseEntity.ok(it) }
             ?: ResponseEntity.notFound().build()
@@ -38,7 +38,7 @@ class WorksController(
     fun findByCategoryId(
         @Parameter(description = "카테고리 ID", required = true)
         @PathVariable categoryId: Int?
-    ): ResponseEntity<List<Works>> {
+    ): ResponseEntity<List<WorksDomain>> {
         return ResponseEntity.ok(
             worksService.findByCategoryId(categoryId)
         )
@@ -46,7 +46,7 @@ class WorksController(
 
     @Operation(summary = "작품 생성", description = "새로운 작품을 생성합니다.")
     @PostMapping
-    fun create(@RequestBody request: CreateWorksRequest): ResponseEntity<Works> {
+    fun create(@RequestBody request: CreateWorksRequest): ResponseEntity<WorksDomain> {
         val works = worksService.create(request)
         return ResponseEntity.ok(works)
     }
@@ -57,7 +57,7 @@ class WorksController(
         @Parameter(description = "작품 ID", required = true)
         @PathVariable id: Long,
         @RequestBody request: UpdateWorksRequest
-    ): ResponseEntity<Works> {
+    ): ResponseEntity<WorksDomain> {
         val works = worksService.update(id, request) ?: return ResponseEntity.notFound().build()
         return ResponseEntity.ok(works)
     }

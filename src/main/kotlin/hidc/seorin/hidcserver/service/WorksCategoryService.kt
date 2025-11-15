@@ -1,5 +1,6 @@
 package hidc.seorin.hidcserver.service
 
+import hidc.seorin.hidcserver.domain.WorksCategoryDomain
 import hidc.seorin.hidcserver.dto.CreateWorksCategoryRequest
 import hidc.seorin.hidcserver.dto.UpdateWorksCategoryRequest
 import hidc.seorin.hidcserver.entity.WorksCategory
@@ -12,25 +13,25 @@ import org.springframework.transaction.annotation.Transactional
 class WorksCategoryService(
     private val worksCategoryRepository: WorksCategoryRepository
 ) {
-    fun findAll(): List<WorksCategory> {
-        return worksCategoryRepository.findAll()
+    fun findAll(): List<WorksCategoryDomain> {
+        return worksCategoryRepository.findAll().map { WorksCategoryDomain.from(it) }
     }
 
-    fun findById(id: Int): WorksCategory? {
-        return worksCategoryRepository.findById(id).orElse(null)
+    fun findById(id: Int): WorksCategoryDomain? {
+        return worksCategoryRepository.findById(id).orElse(null)?.let { WorksCategoryDomain.from(it) }
     }
 
     @Transactional
-    fun create(request: CreateWorksCategoryRequest): WorksCategory {
+    fun create(request: CreateWorksCategoryRequest): WorksCategoryDomain {
         val category = WorksCategory(name = request.name)
-        return worksCategoryRepository.save(category)
+        return WorksCategoryDomain.from(worksCategoryRepository.save(category))
     }
 
     @Transactional
-    fun update(id: Int, request: UpdateWorksCategoryRequest): WorksCategory? {
+    fun update(id: Int, request: UpdateWorksCategoryRequest): WorksCategoryDomain? {
         val category = worksCategoryRepository.findById(id).orElse(null) ?: return null
         val updated = category.copy(name = request.name)
-        return worksCategoryRepository.save(updated)
+        return WorksCategoryDomain.from(worksCategoryRepository.save(updated))
     }
 
     @Transactional

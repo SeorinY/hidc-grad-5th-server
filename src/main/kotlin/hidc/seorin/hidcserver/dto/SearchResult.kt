@@ -1,13 +1,13 @@
 package hidc.seorin.hidcserver.dto
 
-import hidc.seorin.hidcserver.entity.Designers
-import hidc.seorin.hidcserver.entity.Professor
-import hidc.seorin.hidcserver.entity.Works
+import hidc.seorin.hidcserver.domain.DesignersDomain
+import hidc.seorin.hidcserver.domain.ProfessorDomain
+import hidc.seorin.hidcserver.domain.WorksDomain
 
 data class SearchResult(
-    val professors: List<Professor> = emptyList(),
-    val designers: List<Designers> = emptyList(),
-    val works: List<Works> = emptyList(),
+    val professors: List<ProfessorDomain> = emptyList(),
+    val designers: List<DesignersDomain> = emptyList(),
+    val works: List<WorksDomain> = emptyList(),
     val resultType: String
 )
 

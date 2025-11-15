@@ -1,5 +1,6 @@
 package hidc.seorin.hidcserver.service
 
+import hidc.seorin.hidcserver.domain.WorksFileDomain
 import hidc.seorin.hidcserver.dto.CreateWorksFileRequest
 import hidc.seorin.hidcserver.dto.UpdateWorksFileRequest
 import hidc.seorin.hidcserver.entity.WorksFile
@@ -14,16 +15,16 @@ class WorksFileService(
     private val worksFileRepository: WorksFileRepository,
     private val worksRepository: WorksRepository
 ) {
-    fun findAll(): List<WorksFile> {
-        return worksFileRepository.findAll()
+    fun findAll(): List<WorksFileDomain> {
+        return worksFileRepository.findAll().map { WorksFileDomain.from(it) }
     }
 
-    fun findById(id: Long): WorksFile? {
-        return worksFileRepository.findById(id).orElse(null)
+    fun findById(id: Long): WorksFileDomain? {
+        return worksFileRepository.findById(id).orElse(null)?.let { WorksFileDomain.from(it) }
     }
 
     @Transactional
-    fun create(request: CreateWorksFileRequest): WorksFile {
+    fun create(request: CreateWorksFileRequest): WorksFileDomain {
         val works = worksRepository.findById(request.worksId).orElseThrow {
             IllegalArgumentException("Works not found with id: ${request.worksId}")
         }
@@ -34,11 +35,11 @@ class WorksFileService(
             seq = request.seq,
             works = works
         )
-        return worksFileRepository.save(worksFile)
+        return WorksFileDomain.from(worksFileRepository.save(worksFile))
     }
 
     @Transactional
-    fun update(id: Long, request: UpdateWorksFileRequest): WorksFile? {
+    fun update(id: Long, request: UpdateWorksFileRequest): WorksFileDomain? {
         val worksFile = worksFileRepository.findById(id).orElse(null) ?: return null
         val works = worksRepository.findById(request.worksId).orElseThrow {
             IllegalArgumentException("Works not found with id: ${request.worksId}")
@@ -50,7 +51,7 @@ class WorksFileService(
             seq = request.seq,
             works = works
         )
-        return worksFileRepository.save(updated)
+        return WorksFileDomain.from(worksFileRepository.save(updated))
     }
 
     @Transactional

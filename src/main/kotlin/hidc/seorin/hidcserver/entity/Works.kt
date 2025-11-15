@@ -44,6 +44,6 @@ data class Works(
     val categories: List<WorksCategory> = emptyList(),
 
     @OneToMany(mappedBy = "works", fetch = FetchType.LAZY)
-    val works: List<WorksFile> = emptyList()
+    val worksFiles: List<WorksFile> = emptyList()
 )
 

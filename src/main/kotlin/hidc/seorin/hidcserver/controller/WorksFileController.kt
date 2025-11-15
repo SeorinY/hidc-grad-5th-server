@@ -1,8 +1,8 @@
 package hidc.seorin.hidcserver.controller
 
+import hidc.seorin.hidcserver.domain.WorksFileDomain
 import hidc.seorin.hidcserver.dto.CreateWorksFileRequest
 import hidc.seorin.hidcserver.dto.UpdateWorksFileRequest
-import hidc.seorin.hidcserver.entity.WorksFile
 import hidc.seorin.hidcserver.service.WorksFileService
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.Parameter
@@ -18,7 +18,7 @@ class WorksFileController(
 ) {
     @Operation(summary = "모든 작품 파일 조회", description = "등록된 모든 작품 파일 목록을 조회합니다.")
     @GetMapping
-    fun findAll(): List<WorksFile> {
+    fun findAll(): List<WorksFileDomain> {
         return worksFileService.findAll()
     }
 
@@ -27,14 +27,14 @@ class WorksFileController(
     fun findById(
         @Parameter(description = "작품 파일 ID", required = true)
         @PathVariable id: Long
-    ): ResponseEntity<WorksFile> {
+    ): ResponseEntity<WorksFileDomain> {
         val file = worksFileService.findById(id) ?: return ResponseEntity.notFound().build()
         return ResponseEntity.ok(file)
     }
 
     @Operation(summary = "작품 파일 생성", description = "새로운 작품 파일을 생성합니다.")
     @PostMapping
-    fun create(@RequestBody request: CreateWorksFileRequest): ResponseEntity<WorksFile> {
+    fun create(@RequestBody request: CreateWorksFileRequest): ResponseEntity<WorksFileDomain> {
         val file = worksFileService.create(request)
         return ResponseEntity.ok(file)
     }
@@ -45,7 +45,7 @@ class WorksFileController(
         @Parameter(description = "작품 파일 ID", required = true)
         @PathVariable id: Long,
         @RequestBody request: UpdateWorksFileRequest
-    ): ResponseEntity<WorksFile> {
+    ): ResponseEntity<WorksFileDomain> {
         val file = worksFileService.update(id, request) ?: return ResponseEntity.notFound().build()
         return ResponseEntity.ok(file)
     }

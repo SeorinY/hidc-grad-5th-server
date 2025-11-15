@@ -1,6 +1,8 @@
 package hidc.seorin.hidcserver.service
 
+import hidc.seorin.hidcserver.domain.DesignersDomain
 import hidc.seorin.hidcserver.domain.SortType
+import hidc.seorin.hidcserver.domain.WorksDomain
 import hidc.seorin.hidcserver.dto.CreateDesignersRequest
 import hidc.seorin.hidcserver.dto.UpdateDesignersRequest
 import hidc.seorin.hidcserver.entity.Designers
@@ -15,22 +17,31 @@ class DesignersService(
     private val designersRepository: DesignersRepository,
     private val worksRepository: WorksRepository
 ) {
-    fun findAll(sortType: SortType): List<Designers> {
+    fun findAll(sortType: SortType): List<DesignersDomain> {
         val designers = designersRepository.findAll()
         
-        return when (sortType) {
+        val sorted = when (sortType) {
             SortType.ASC -> designers.sortedBy { it.name }
             SortType.DESC -> designers.sortedByDescending { it.name }
             SortType.RANDOM -> designers.shuffled()
         }
+        
+        return sorted.map { DesignersDomain.from(it) }
     }
 
-    fun findById(id: Long): Designers? {
-        return designersRepository.findById(id).orElse(null)
+    fun findById(id: Long): DesignersDomain? {
+        return designersRepository
+            .findById(id)
+            .orElse(null)
+            ?.let {
+                val designer = DesignersDomain.from(it)
+                designer.works = it.works?.let { WorksDomain.from(it) }
+                designer
+            }
     }
 
     @Transactional
-    fun create(request: CreateDesignersRequest): Designers {
+    fun create(request: CreateDesignersRequest): DesignersDomain {
         val works = request.worksId?.let { worksRepository.findById(it).orElse(null) }
         
         val designer = Designers(
@@ -44,11 +55,11 @@ class DesignersService(
             studentNumber = request.studentNumber,
             works = works
         )
-        return designersRepository.save(designer)
+        return DesignersDomain.from(designersRepository.save(designer))
     }
 
     @Transactional
-    fun update(id: Long, request: UpdateDesignersRequest): Designers? {
+    fun update(id: Long, request: UpdateDesignersRequest): DesignersDomain? {
         val designer = designersRepository.findById(id).orElse(null) ?: return null
         val works = request.worksId?.let { worksRepository.findById(it).orElse(null) }
         
@@ -63,7 +74,7 @@ class DesignersService(
             studentNumber = request.studentNumber,
             works = works
         )
-        return designersRepository.save(updated)
+        return DesignersDomain.from(designersRepository.save(updated))
     }
 
     @Transactional

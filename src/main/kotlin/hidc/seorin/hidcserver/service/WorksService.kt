@@ -1,5 +1,10 @@
 package hidc.seorin.hidcserver.service
 
+import hidc.seorin.hidcserver.domain.DesignersDomain
+import hidc.seorin.hidcserver.domain.ProfessorDomain
+import hidc.seorin.hidcserver.domain.WorksCategoryDomain
+import hidc.seorin.hidcserver.domain.WorksDomain
+import hidc.seorin.hidcserver.domain.WorksFileDomain
 import hidc.seorin.hidcserver.dto.CreateWorksRequest
 import hidc.seorin.hidcserver.dto.UpdateWorksRequest
 import hidc.seorin.hidcserver.entity.Works
@@ -18,26 +23,57 @@ class WorksService(
     private val professorRepository: ProfessorRepository,
     private val designersRepository: DesignersRepository
 ) {
-    fun findAll(): List<Works> {
-        return worksRepository.findAll()
+    fun findAll(): List<WorksDomain> {
+        return worksRepository
+            .findAll()
+            .map {
+                val works = WorksDomain.from(it)
+                works.designers = it
+                    .designers
+                    .map { designers -> DesignersDomain.from(designers) }
+                works
+            }
     }
 
-    fun findById(id: Long): Works? {
-        return worksRepository.findById(id).orElse(null)
+    fun findById(id: Long): WorksDomain? {
+        return worksRepository
+            .findById(id)
+            .orElse(null)
+            ?.let {
+                val works = WorksDomain.from(it)
+                works.leadDesigner = it.leadDesigner?.let { DesignersDomain.from(it) }
+                works.designers = it
+                    .designers
+                    .map { designers -> DesignersDomain.from(designers) }
+                works.categories = it
+                    .categories
+                    .map { category -> WorksCategoryDomain.from(category) }
+                works.professor = it.professor?.let { ProfessorDomain.from(it) }
+                works.worksFiles = it.worksFiles.map { WorksFileDomain.from(it) }
+                works
+            }
     }
 
-    fun findByCategoryId(categoryId: Int?): List<Works> {
-        return categoryId?.let {
+    fun findByCategoryId(categoryId: Int?): List<WorksDomain> {
+        val works = categoryId?.let {
             worksCategoryRepository
                 .findById(categoryId)
                 .orElse(null)
                 ?.works
                 ?: emptyList()
         } ?: worksRepository.findAll()
+        
+        return works.map {
+            val works = WorksDomain.from(it)
+            works.designers = it
+                .designers
+                .map { designers -> DesignersDomain.from(designers) }
+            works
+        }
     }
 
     @Transactional
-    fun create(request: CreateWorksRequest): Works {
+    fun create(request: CreateWorksRequest): WorksDomain {
         val professor = request.professorId?.let { professorRepository.findById(it).orElse(null) }
         val leadDesigner = request.leadDesignerId?.let { designersRepository.findById(it).orElse(null) }
         val categories = request.categoryIds?.mapNotNull { 
@@ -54,11 +90,11 @@ class WorksService(
             leadDesigner = leadDesigner,
             categories = categories
         )
-        return worksRepository.save(works)
+        return WorksDomain.from(worksRepository.save(works))
     }
 
     @Transactional
-    fun update(id: Long, request: UpdateWorksRequest): Works? {
+    fun update(id: Long, request: UpdateWorksRequest): WorksDomain? {
         val works = worksRepository.findById(id).orElse(null) ?: return null
         val professor = request.professorId?.let { professorRepository.findById(it).orElse(null) }
         val leadDesigner = request.leadDesignerId?.let { designersRepository.findById(it).orElse(null) }
@@ -76,7 +112,7 @@ class WorksService(
             leadDesigner = leadDesigner,
             categories = categories
         )
-        return worksRepository.save(updated)
+        return WorksDomain.from(worksRepository.save(updated))
     }
 
     @Transactional
