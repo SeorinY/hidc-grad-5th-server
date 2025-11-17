@@ -32,7 +32,7 @@ data class Works(
     val designers: List<Designers> = emptyList(),
 
     @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "lead_designers_id", nullable = false)
+    @JoinColumn(name = "lead_designers_id")
     val leadDesigner: Designers? = null,
 
     @ManyToMany(fetch = FetchType.LAZY)
