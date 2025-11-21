@@ -33,6 +33,7 @@ class WorksService(
                     .map { designers -> DesignersDomain.from(designers) }
                 works
             }
+            .sortedBy { it.name }
     }
 
     fun findById(id: Long): WorksDomain? {
@@ -70,6 +71,7 @@ class WorksService(
                 .map { designers -> DesignersDomain.from(designers) }
             works
         }
+            .sortedBy { it.name }
     }
 
     @Transactional
