@@ -8,6 +8,7 @@ import hidc.seorin.hidcserver.service.DesignersService
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.Parameter
 import io.swagger.v3.oas.annotations.tags.Tag
+import jakarta.validation.Valid
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 
@@ -41,7 +42,7 @@ class DesignersController(
 
     @Operation(summary = "디자이너 생성", description = "새로운 디자이너를 생성합니다.")
     @PostMapping
-    fun create(@RequestBody request: CreateDesignersRequest): ResponseEntity<DesignersDomain> {
+    fun create(@Valid @RequestBody request: CreateDesignersRequest): ResponseEntity<DesignersDomain> {
         val designer = designersService.create(request)
         return ResponseEntity.ok(designer)
     }

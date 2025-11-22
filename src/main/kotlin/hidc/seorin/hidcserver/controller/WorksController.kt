@@ -7,6 +7,7 @@ import hidc.seorin.hidcserver.service.WorksService
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.Parameter
 import io.swagger.v3.oas.annotations.tags.Tag
+import jakarta.validation.Valid
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 
@@ -46,7 +47,7 @@ class WorksController(
 
     @Operation(summary = "작품 생성", description = "새로운 작품을 생성합니다.")
     @PostMapping
-    fun create(@RequestBody request: CreateWorksRequest): ResponseEntity<WorksDomain> {
+    fun create(@Valid @RequestBody request: CreateWorksRequest): ResponseEntity<WorksDomain> {
         val works = worksService.create(request)
         return ResponseEntity.ok(works)
     }

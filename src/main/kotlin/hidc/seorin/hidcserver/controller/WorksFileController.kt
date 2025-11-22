@@ -7,6 +7,7 @@ import hidc.seorin.hidcserver.service.WorksFileService
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.Parameter
 import io.swagger.v3.oas.annotations.tags.Tag
+import jakarta.validation.Valid
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 
@@ -34,7 +35,7 @@ class WorksFileController(
 
     @Operation(summary = "작품 파일 생성", description = "새로운 작품 파일을 생성합니다.")
     @PostMapping
-    fun create(@RequestBody request: CreateWorksFileRequest): ResponseEntity<WorksFileDomain> {
+    fun create(@Valid @RequestBody request: CreateWorksFileRequest): ResponseEntity<WorksFileDomain> {
         val file = worksFileService.create(request)
         return ResponseEntity.ok(file)
     }
