@@ -10,7 +10,9 @@ class CorsConfig : WebMvcConfigurer {
         registry.addMapping("/**")
             .allowedOrigins(
                 "https://api.hidcgs2025.com",
+                "http://api.hidcgs2025.com",
                 "https://hidcgs2025.com",
+                "http://hidcgs2025.com",
                 "https://hidc-client.pages.dev",
                 "http://localhost:3000",
                 "http://localhost:5173"
