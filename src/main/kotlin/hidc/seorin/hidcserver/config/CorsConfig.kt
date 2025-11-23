@@ -8,9 +8,17 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer
 class CorsConfig : WebMvcConfigurer {
     override fun addCorsMappings(registry: CorsRegistry) {
         registry.addMapping("/**")
-            .allowedOrigins("*")
+            .allowedOrigins(
+                "https://api.hidcgs2025.com",
+                "https://hidcgs2025.com",
+                "https://hidc-client.pages.dev",
+                "http://localhost:3000",
+                "http://localhost:5173"
+            )
             .allowedMethods("GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS")
             .allowedHeaders("*")
+            .allowCredentials(true)
+            .exposedHeaders("*")
             .maxAge(3600)
     }
 }
