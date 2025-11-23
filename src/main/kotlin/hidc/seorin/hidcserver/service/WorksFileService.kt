@@ -25,7 +25,7 @@ class WorksFileService(
 
     @Transactional
     fun create(request: CreateWorksFileRequest): WorksFileDomain {
-        val works = worksRepository.findById(request.worksId).orElseThrow {
+        val works = worksRepository.findById(request.worksId ?: throw IllegalArgumentException("worksId는 필수입니다")).orElseThrow {
             IllegalArgumentException("Works not found with id: ${request.worksId}")
         }
         
