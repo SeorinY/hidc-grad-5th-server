@@ -43,7 +43,7 @@ data class Works(
     )
     val categories: List<WorksCategory> = emptyList(),
 
-    @OneToMany(mappedBy = "works", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "works", fetch = FetchType.LAZY, cascade = [CascadeType.ALL], orphanRemoval = true)
     val worksFiles: List<WorksFile> = emptyList()
 )
 

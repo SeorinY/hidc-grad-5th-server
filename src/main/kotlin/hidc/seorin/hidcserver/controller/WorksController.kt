@@ -69,10 +69,7 @@ class WorksController(
         @Parameter(description = "작품 ID", required = true)
         @PathVariable id: Long
     ): ResponseEntity<Void> {
-        return if (worksService.delete(id)) {
-            ResponseEntity.noContent().build()
-        } else {
-            ResponseEntity.notFound().build()
-        }
+        worksService.delete(id)
+        return ResponseEntity.noContent().build()
     }
 }

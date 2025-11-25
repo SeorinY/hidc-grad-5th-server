@@ -118,10 +118,9 @@ class WorksService(
     }
 
     @Transactional
-    fun delete(id: Long): Boolean {
-        if (!worksRepository.existsById(id)) return false
+    fun delete(id: Long) {
+        if (!worksRepository.existsById(id)) throw Exception("존재하지 않는 workd id")
         worksRepository.deleteById(id)
-        return true
     }
 }
 
