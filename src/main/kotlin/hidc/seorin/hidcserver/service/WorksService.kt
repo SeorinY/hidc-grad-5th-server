@@ -50,7 +50,9 @@ class WorksService(
                     .categories
                     .map { category -> WorksCategoryDomain.from(category) }
                 works.professor = it.professor?.let { ProfessorDomain.from(it) }
-                works.worksFiles = it.worksFiles.map { WorksFileDomain.from(it) }
+                works.worksFiles = it.worksFiles
+                    .sortedBy { file -> file.seq }
+                    .map { WorksFileDomain.from(it) }
                 works
             }
     }
