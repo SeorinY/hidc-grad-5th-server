@@ -51,7 +51,6 @@ class WorksFileService(
             seq = request.seq,
             works = works
         )
-        worksFileRepository.save(updated)
         return WorksFileDomain.from(worksFileRepository.save(updated))
     }
 
